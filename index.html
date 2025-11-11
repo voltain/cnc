@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Frézování – 40% výšky, 30/60/10</title>
+<title>Frézování – 40% výšky, 30/50/20</title>
 <style>
   :root{
     --line:#d9dee6; --text:#0b1322; --bg1:#e9eef6; --bg2:#f7f9fc;
@@ -34,10 +34,10 @@
     display:flex;flex-direction:column;gap:5px;
     overflow:hidden;
   }
-  /* 30% label | 60% input | 10% unit */
+  /* 30% label | 50% input | 20% unit */
   .row{
     flex:1;min-height:0;
-    display:grid;grid-template-columns:30% 60% 10%;
+    display:grid;grid-template-columns:30% 50% 20%;
     align-items:center;column-gap:6px;
   }
   .label{font-size:var(--label);line-height:1.1;padding-right:4px}
@@ -54,7 +54,7 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>Frézování v1.1</h1>
+      <h1>Frézování v1.3</h1>
       <button id="reset" class="reset-btn" title="Vymazat všechna pole">Reset</button>
     </header>
 
