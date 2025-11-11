@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Frézování – 40% výšky, 40% štítky</title>
+<title>Frézování – 40% výšky, 30/60/10</title>
 <style>
   :root{
     --line:#d9dee6; --text:#0b1322; --bg1:#e9eef6; --bg2:#f7f9fc;
@@ -16,7 +16,7 @@
     background:linear-gradient(180deg,var(--bg1),var(--bg2));
     -webkit-text-size-adjust:100%;
     touch-action:manipulation;
-    overflow:hidden; /* žádné globální scrollování */
+    overflow:hidden;
   }
   .wrap{max-width:520px;margin:0 auto;padding:8px 12px;height:100%}
   header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
@@ -29,24 +29,22 @@
     border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.06);
     padding:6px 8px;
   }
-  /* Přesně 40 % výšky bezpečného viewportu, bez scrollu */
   .form-window{
     height:40svh; height:40vh;
-    display:flex; flex-direction:column;
+    display:flex;flex-direction:column;gap:5px;
     overflow:hidden;
   }
-  /* 7 stejně vysokých řádků, procenta pro šířky sloupců:
-     40% štítek | 55% vstup | 5% jednotka */
+  /* 30% label | 60% input | 10% unit */
   .row{
-    flex:1; min-height:0;
-    display:grid; grid-template-columns: 40% 55% 5%;
-    column-gap:8px; align-items:center;
+    flex:1;min-height:0;
+    display:grid;grid-template-columns:30% 60% 10%;
+    align-items:center;column-gap:6px;
   }
-  .label{font-size:var(--label); line-height:1.1; padding-right:4px}
+  .label{font-size:var(--label);line-height:1.1;padding-right:4px}
   input[type="text"]{
     width:100%;
     background:#fff;border:1px solid var(--line);border-radius:10px;
-    padding:8px 10px;font-size:var(--input);font-weight:700;text-align:right;
+    padding:6px 8px;font-size:var(--input);font-weight:700;text-align:right;
     box-shadow:inset 0 1px 0 rgba(0,0,0,.03);
   }
   input[type="text"]:focus{outline:3px solid rgba(25,118,210,.22);border-color:#8fb9f1}
