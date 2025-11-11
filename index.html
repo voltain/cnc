@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Frézování – mobilní kalkulačka</title>
+<title>Frézování – 40% výšky</title>
 <style>
   :root{
     --line:#d9dee6; --text:#0b1322; --bg1:#e9eef6; --bg2:#f7f9fc;
+    --label:16px; --input:16px; --unit:14px;
   }
   *{box-sizing:border-box;font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial,sans-serif}
   body{
@@ -15,31 +16,38 @@
     -webkit-text-size-adjust:100%;
     touch-action:manipulation;
   }
-  .wrap{max-width:520px;margin:0 auto;padding:10px 12px 12px;min-height:100svh}
-  header{display:flex;align-items:center;justify-content:space-between}
-  header h1{margin:6px 0 8px;font-size:clamp(20px,5vw,26px);font-weight:800;letter-spacing:.2px}
+  .wrap{max-width:520px;margin:0 auto;padding:8px 12px;min-height:100svh}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  header h1{margin:0;font-size:18px;font-weight:800;letter-spacing:.2px}
   .reset-btn{
     background:#fff;border:1px solid var(--line);border-radius:10px;
-    font-size:16px;padding:8px 14px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08);
+    font-size:14px;padding:6px 10px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.06);
   }
   .panel{
-    border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.06);
-    padding:8px 10px;
+    border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.06);
+    padding:6px 8px;
   }
+  /* EXACT HEIGHT: 40% of the safe viewport, no scrolling */
   .form-window{
-    height:60svh; height:60vh; overflow:auto; scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
+    height:40svh; height:40vh;
+    display:flex; flex-direction:column; gap:0;
+    overflow:hidden;
   }
-  .row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
-  .row:last-child{border-bottom:none}
-  .label{flex:1;font-size:18px;line-height:1.2}
-  .right{display:flex;align-items:center;gap:8px}
+  /* 7 equally tall rows that shrink/grow to fit */
+  .row{
+    flex:1; min-height:0;
+    display:grid; grid-template-columns: 1fr minmax(120px, 38vw) 48px;
+    column-gap:8px; align-items:center;
+  }
+  .label{font-size:var(--label); line-height:1.1; padding-right:4px}
   input[type="text"]{
-    width:min(48vw,280px);background:#fff;border:1px solid var(--line);border-radius:12px;
-    padding:14px 14px;font-size:18px;font-weight:700;text-align:right;
+    width:100%;
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:8px 10px;font-size:var(--input);font-weight:700;text-align:right;
     box-shadow:inset 0 1px 0 rgba(0,0,0,.03);
   }
-  input[type="text"]:focus{outline:3px solid rgba(25,118,210,.25);border-color:#8fb9f1}
-  .unit{min-width:64px;text-align:left;color:#5d6675;font-size:14px}
+  input[type="text"]:focus{outline:3px solid rgba(25,118,210,.22);border-color:#8fb9f1}
+  .unit{width:48px;text-align:left;color:#5d6675;font-size:var(--unit)}
 </style>
 </head>
 <body>
@@ -51,13 +59,13 @@
 
     <div class="panel">
       <div class="form-window" role="form" aria-label="Frézovací kalkulačka">
-        <div class="row"><span class="label">Průměr frézy</span><div class="right"><input id="d" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm</span></div></div>
-        <div class="row"><span class="label">Řezná rychlost</span><div class="right"><input id="vc" type="text" inputmode="decimal" autocomplete="off"><span class="unit">m/min</span></div></div>
-        <div class="row"><span class="label">Otáčky</span><div class="right"><input id="n" type="text" inputmode="decimal" autocomplete="off"><span class="unit">ot/min</span></div></div>
-        <div class="row"><span class="label">Počet zubů</span><div class="right"><input id="z" type="text" inputmode="decimal" autocomplete="off"><span class="unit">z</span></div></div>
-        <div class="row"><span class="label">Posuv na zub</span><div class="right"><input id="fz" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm/z</span></div></div>
-        <div class="row"><span class="label">Posuv minutový</span><div class="right"><input id="vf" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm/min</span></div></div>
-        <div class="row"><span class="label">Posuv na otáčku</span><div class="right"><input id="fpr" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm/ot</span></div></div>
+        <div class="row"><span class="label">Průměr frézy</span><input id="d" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm</span></div>
+        <div class="row"><span class="label">Řezná rychlost</span><input id="vc" type="text" inputmode="decimal" autocomplete="off"><span class="unit">m/min</span></div>
+        <div class="row"><span class="label">Otáčky</span><input id="n" type="text" inputmode="decimal" autocomplete="off"><span class="unit">ot/min</span></div>
+        <div class="row"><span class="label">Počet zubů</span><input id="z" type="text" inputmode="decimal" autocomplete="off"><span class="unit">z</span></div>
+        <div class="row"><span class="label">Posuv na zub</span><input id="fz" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm/z</span></div>
+        <div class="row"><span class="label">Posuv minutový</span><input id="vf" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm/min</span></div>
+        <div class="row"><span class="label">Posuv na otáčku</span><input id="fpr" type="text" inputmode="decimal" autocomplete="off"><span class="unit">mm/ot</span></div>
       </div>
     </div>
   </div>
@@ -72,61 +80,67 @@
   const now = ()=>Date.now();
   const parse = v => {
     if(!v) return null;
-    const n = parseFloat(v.replace(",",".").trim());
-    return isFinite(n)?n:null;
+    const n = parseFloat(v.replace(",", ".").trim());
+    return isFinite(n) ? n : null;
   };
   const fmt = (x,dec=3)=>(x==null||!isFinite(x))?"":(+x.toFixed(dec)).toString();
   const setValue=(target,val,dec)=>target.value=fmt(val,dec);
 
+  // input listeners
   ids.forEach(id=>{
     el[id].addEventListener("focus",()=>focused=el[id]);
-    el[id].addEventListener("input",()=>{lastTouched[id]=now();solve(id)});
-    el[id].addEventListener("change",()=>{lastTouched[id]=now();solve(id)});
+    el[id].addEventListener("input",()=>{ lastTouched[id]=now(); solve(id); });
+    el[id].addEventListener("change",()=>{ lastTouched[id]=now(); solve(id); });
   });
 
+  // Reset button
   document.getElementById("reset").addEventListener("click",()=>{
     ids.forEach(id=>el[id].value="");
   });
 
   function solve(trigger){
     const D=parse(el.d.value),Vc=parse(el.vc.value),n=parse(el.n.value),z=parse(el.z.value),fz=parse(el.fz.value),vf=parse(el.vf.value),fpr=parse(el.fpr.value);
-    // Section A
+
+    // Section A: Vc = π*D*n/1000
     const filledA=[D,Vc,n].filter(v=>v!=null).length;
     if(filledA>=2){
-      if(D==null)setValue(el.d,(1000*Vc)/(Math.PI*n));
-      else if(Vc==null)setValue(el.vc,(Math.PI*D*n)/1000);
-      else if(n==null)setValue(el.n,(1000*Vc)/(Math.PI*D),0);
+      if(D==null) setValue(el.d,(1000*Vc)/(Math.PI*n));
+      else if(Vc==null) setValue(el.vc,(Math.PI*D*n)/1000);
+      else if(n==null) setValue(el.n,(1000*Vc)/(Math.PI*D),0);
       else{
         const others=["d","vc","n"].filter(x=>x!==trigger);
         const target=(lastTouched[others[0]]<=lastTouched[others[1]])?others[0]:others[1];
-        if(target==="d")setValue(el.d,(1000*Vc)/(Math.PI*n));
-        if(target==="vc")setValue(el.vc,(Math.PI*D*n)/1000);
-        if(target==="n")setValue(el.n,(1000*Vc)/(Math.PI*D),0);
+        if(target==="d") setValue(el.d,(1000*Vc)/(Math.PI*n));
+        if(target==="vc") setValue(el.vc,(Math.PI*D*n)/1000);
+        if(target==="n") setValue(el.n,(1000*Vc)/(Math.PI*D),0);
       }
     }
+
+    // refresh after A
     const n2=parse(el.n.value),z2=parse(el.z.value),fz2=parse(el.fz.value),fpr2=parse(el.fpr.value),vf2=parse(el.vf.value);
-    // Section B
+
+    // Section B: fpr = z*fz ; Vf = n*fpr = n*z*fz
     if(z2!=null){
-      if(fz2!=null&&fpr2==null)setValue(el.fpr,z2*fz2);
-      else if(fpr2!=null&&fz2==null)setValue(el.fz,fpr2/z2);
-      else if(fz2!=null&&fpr2!=null&&trigger==="z"){
+      if(fz2!=null && fpr2==null) setValue(el.fpr, z2*fz2);
+      else if(fpr2!=null && fz2==null) setValue(el.fz, fpr2/z2);
+      else if(fz2!=null && fpr2!=null && trigger==="z"){
         const t=(lastTouched["fz"]<=lastTouched["fpr"])?"fz":"fpr";
-        if(t==="fz")setValue(el.fz,fpr2/z2);else setValue(el.fpr,z2*fz2);
+        if(t==="fz") setValue(el.fz, fpr2/z2); else setValue(el.fpr, z2*fz2);
       }
     }
     const fprB=parse(el.fpr.value),vfB=parse(el.vf.value);
     if(n2!=null){
-      if(fprB!=null&&vfB==null)setValue(el.vf,n2*fprB,0);
-      else if(vfB!=null&&fprB==null)setValue(el.fpr,vfB/n2);
-      else if(fprB!=null&&vfB!=null&&trigger==="n"){
+      if(fprB!=null && vfB==null) setValue(el.vf, n2*fprB, 0);
+      else if(vfB!=null && fprB==null) setValue(el.fpr, vfB/n2);
+      else if(fprB!=null && vfB!=null && trigger==="n"){
         const t=(lastTouched["fpr"]<=lastTouched["vf"])?"fpr":"vf";
-        if(t==="vf")setValue(el.vf,n2*fprB,0);else setValue(el.fpr,vfB/n2);
+        if(t==="vf") setValue(el.vf, n2*fprB, 0); else setValue(el.fpr, vfB/n2);
       }
     }
-    if(n2!=null&&z2!=null){
+    if(n2!=null && z2!=null){
       const fzB=parse(el.fz.value),vfC=parse(el.vf.value);
-      if(fzB!=null&&(trigger==="fz"||vfC==null))setValue(el.vf,n2*z2*fzB,0);
-      else if(vfC!=null&&fzB==null)setValue(el.fz,vfC/(n2*z2));
+      if(fzB!=null && (trigger==="fz" || vfC==null)) setValue(el.vf, n2*z2*fzB, 0);
+      else if(vfC!=null && fzB==null) setValue(el.fz, vfC/(n2*z2));
     }
   }
   ids.forEach(id=>lastTouched[id]=Date.now());
