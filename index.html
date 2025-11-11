@@ -3,20 +3,22 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Frézování – 40% výšky</title>
+<title>Frézování – 40% výšky, 40% štítky</title>
 <style>
   :root{
     --line:#d9dee6; --text:#0b1322; --bg1:#e9eef6; --bg2:#f7f9fc;
     --label:16px; --input:16px; --unit:14px;
   }
   *{box-sizing:border-box;font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  html,body{height:100%}
   body{
     margin:0;color:var(--text);
     background:linear-gradient(180deg,var(--bg1),var(--bg2));
     -webkit-text-size-adjust:100%;
     touch-action:manipulation;
+    overflow:hidden; /* žádné globální scrollování */
   }
-  .wrap{max-width:520px;margin:0 auto;padding:8px 12px;min-height:100svh}
+  .wrap{max-width:520px;margin:0 auto;padding:8px 12px;height:100%}
   header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   header h1{margin:0;font-size:18px;font-weight:800;letter-spacing:.2px}
   .reset-btn{
@@ -27,16 +29,17 @@
     border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.06);
     padding:6px 8px;
   }
-  /* EXACT HEIGHT: 40% of the safe viewport, no scrolling */
+  /* Přesně 40 % výšky bezpečného viewportu, bez scrollu */
   .form-window{
     height:40svh; height:40vh;
-    display:flex; flex-direction:column; gap:0;
+    display:flex; flex-direction:column;
     overflow:hidden;
   }
-  /* 7 equally tall rows that shrink/grow to fit */
+  /* 7 stejně vysokých řádků, procenta pro šířky sloupců:
+     40% štítek | 55% vstup | 5% jednotka */
   .row{
     flex:1; min-height:0;
-    display:grid; grid-template-columns: 1fr minmax(120px, 38vw) 48px;
+    display:grid; grid-template-columns: 40% 55% 5%;
     column-gap:8px; align-items:center;
   }
   .label{font-size:var(--label); line-height:1.1; padding-right:4px}
@@ -47,13 +50,13 @@
     box-shadow:inset 0 1px 0 rgba(0,0,0,.03);
   }
   input[type="text"]:focus{outline:3px solid rgba(25,118,210,.22);border-color:#8fb9f1}
-  .unit{width:48px;text-align:left;color:#5d6675;font-size:var(--unit)}
+  .unit{text-align:left;color:#5d6675;font-size:var(--unit)}
 </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>Frézování v1</h1>
+      <h1>Frézování</h1>
       <button id="reset" class="reset-btn" title="Vymazat všechna pole">Reset</button>
     </header>
 
@@ -75,7 +78,6 @@
   const ids = ["d","vc","n","z","fz","vf","fpr"];
   const el = Object.fromEntries(ids.map(id=>[id, document.getElementById(id)]));
   const lastTouched = Object.fromEntries(ids.map(id=>[id,0]));
-  let focused = null;
 
   const now = ()=>Date.now();
   const parse = v => {
@@ -86,22 +88,17 @@
   const fmt = (x,dec=3)=>(x==null||!isFinite(x))?"":(+x.toFixed(dec)).toString();
   const setValue=(target,val,dec)=>target.value=fmt(val,dec);
 
-  // input listeners
   ids.forEach(id=>{
-    el[id].addEventListener("focus",()=>focused=el[id]);
     el[id].addEventListener("input",()=>{ lastTouched[id]=now(); solve(id); });
     el[id].addEventListener("change",()=>{ lastTouched[id]=now(); solve(id); });
   });
 
-  // Reset button
-  document.getElementById("reset").addEventListener("click",()=>{
-    ids.forEach(id=>el[id].value="");
-  });
+  document.getElementById("reset").addEventListener("click",()=>{ ids.forEach(id=>el[id].value=""); });
 
   function solve(trigger){
     const D=parse(el.d.value),Vc=parse(el.vc.value),n=parse(el.n.value),z=parse(el.z.value),fz=parse(el.fz.value),vf=parse(el.vf.value),fpr=parse(el.fpr.value);
 
-    // Section A: Vc = π*D*n/1000
+    // Sekce A: Vc = π*D*n/1000
     const filledA=[D,Vc,n].filter(v=>v!=null).length;
     if(filledA>=2){
       if(D==null) setValue(el.d,(1000*Vc)/(Math.PI*n));
@@ -116,10 +113,9 @@
       }
     }
 
-    // refresh after A
+    // Sekce B: fpr = z*fz ; Vf = n*fpr = n*z*fz
     const n2=parse(el.n.value),z2=parse(el.z.value),fz2=parse(el.fz.value),fpr2=parse(el.fpr.value),vf2=parse(el.vf.value);
 
-    // Section B: fpr = z*fz ; Vf = n*fpr = n*z*fz
     if(z2!=null){
       if(fz2!=null && fpr2==null) setValue(el.fpr, z2*fz2);
       else if(fpr2!=null && fz2==null) setValue(el.fz, fpr2/z2);
